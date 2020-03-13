@@ -1,14 +1,10 @@
 package ru.itis.servlets.services;
 
-import freemarker.core.OptInTemplateClassResolver;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.itis.servlets.models.MyUserDetails;
-import ru.itis.servlets.models.State;
 import ru.itis.servlets.models.User;
 import ru.itis.servlets.repositories.UsersRepository;
 
@@ -26,7 +22,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     /*Here we are using dummy data, you need to load user data from
      database or other third party application*/
-        User user = findUserbyUername(username);
+        User user = findUserbyLogin(username);
 
         if (user != null) {
             return MyUserDetails.builder().user(user).build();
@@ -35,7 +31,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         }
     }
 
-    private User findUserbyUername(String username) {
+    private User findUserbyLogin(String username) {
         Optional<User> user = usersRepository.findByLogin(username);
         return user.orElse(null);
     }

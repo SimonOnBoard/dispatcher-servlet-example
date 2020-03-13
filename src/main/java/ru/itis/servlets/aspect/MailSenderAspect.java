@@ -20,7 +20,8 @@ public class MailSenderAspect {
     @Autowired
     private MailService mailService;
 
-    @AfterReturning(pointcut = "execution(* ru.itis.servlets.services.FileService.saveFile(..))", returning = "resultDto")
+    @AfterReturning(pointcut = "execution(* ru.itis.servlets.services.FileService.saveFile(..))",
+            returning = "resultDto")
     public void logAfterReturning(JoinPoint joinPoint, FileDto resultDto) {
         System.out.println("hijacked : " + joinPoint.getSignature().getDeclaringTypeName());
         System.out.println("******");

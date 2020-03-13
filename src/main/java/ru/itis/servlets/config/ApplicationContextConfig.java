@@ -122,7 +122,9 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public MailService mailService() { return new MailServiceImpl(); }
+    public MailService mailService() {
+        return new MailServiceImpl();
+    }
 
     @Bean
     public UsersRepository userRepository() {
@@ -160,5 +162,7 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public RegistrationService registrationService() { return new RegistrationServiceImpl(); }
+    public RegistrationService registrationService() {
+        return new RegistrationServiceImpl();
+    }
 }

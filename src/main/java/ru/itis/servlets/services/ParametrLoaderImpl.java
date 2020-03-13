@@ -1,6 +1,7 @@
 package ru.itis.servlets.services;
 
 
+import org.springframework.stereotype.Service;
 import ru.itis.servlets.dto.SignUpDto;
 
 import javax.servlet.ServletException;

@@ -25,7 +25,8 @@
             // Create an FormData object
             var form = $("#post_form")[0];
             var data = new FormData(form);
-            console.log("form data " + data);
+            console.log("fo" +
+                "rm data " + data);
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',

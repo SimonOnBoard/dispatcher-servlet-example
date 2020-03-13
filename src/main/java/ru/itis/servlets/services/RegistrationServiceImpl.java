@@ -10,7 +10,6 @@ import ru.itis.servlets.models.User;
 import ru.itis.servlets.repositories.UsersRepository;
 
 import java.util.UUID;
-
 public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;

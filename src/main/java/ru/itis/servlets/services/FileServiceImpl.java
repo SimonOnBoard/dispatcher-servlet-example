@@ -2,6 +2,8 @@ package ru.itis.servlets.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.servlets.dto.FileDto;
 import ru.itis.servlets.models.FileInfo;
@@ -39,7 +41,7 @@ public class FileServiceImpl implements FileService {
         }
         filesRepository.save(info);
 
-        return FileDto.builder().userLogin(user.user.getLogin()).userName(user.user.getNick()).originalName(info.getOriginalFileName()).size(info.getSize()).url(info.getUrl()).build();
+        return FileDto.builder().userLogin(user.user.getMail()).userName(user.user.getNick()).originalName(info.getOriginalFileName()).size(info.getSize()).url(info.getUrl()).build();
     }
 
     private String getNewFilename(String originalFilename) {
