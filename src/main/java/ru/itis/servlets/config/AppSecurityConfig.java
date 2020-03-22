@@ -25,9 +25,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImp();
-    }
-
-    ;
+    };
 
 
     @Override
