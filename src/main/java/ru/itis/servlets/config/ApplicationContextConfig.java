@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-import ru.itis.servlets.aspect.MailSenderAspect;
 import ru.itis.servlets.repositories.FilesRepository;
 import ru.itis.servlets.repositories.FilesRepositoryImpl;
 import ru.itis.servlets.repositories.UserRepositoryImpl;
@@ -133,7 +132,7 @@ public class ApplicationContextConfig {
 
     @Bean
     public FileService fileService() {
-        return new FileServiceImpl(environment.getProperty("path"));
+        return new FileServiceImpl(environment.getProperty("file.path"));
     }
 
     @Bean
@@ -157,7 +156,7 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public ParametrLoader getParametrLoader() {
+    public ParametrLoader getParameterLoader() {
         return new ParametrLoaderImpl();
     }
 

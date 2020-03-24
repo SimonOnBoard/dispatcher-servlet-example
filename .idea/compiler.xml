@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="dispatcher-servlet-example" target="8" />
+      <module name="dispatcher-servlet-example" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

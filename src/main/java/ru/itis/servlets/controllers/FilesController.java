@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itis.servlets.dto.FileDto;
 import ru.itis.servlets.models.MyUserDetails;
+import ru.itis.servlets.services.FileLoaderThread;
 import ru.itis.servlets.services.FileService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,21 +34,17 @@ public class FilesController {
     @RequestMapping(value = "/files/{file-name:.+}", method = RequestMethod.GET)
     public ModelAndView getFile(@PathVariable("file-name") String fileName, @AuthenticationPrincipal MyUserDetails user, HttpServletResponse httpServletResponse) throws IOException {
         String[] arguments = fileService.getFile(fileName, user);
+        ModelAndView modelAndView = new ModelAndView();
         if (arguments[0].equals("Error")) {
-            ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("file_upload");
             modelAndView.addObject("message", arguments[1]);
-            return modelAndView;
         } else {
-            try (InputStream inputStream = new FileInputStream(new File(arguments[0]));) {
-                httpServletResponse.setContentType(arguments[1]);
-                httpServletResponse.setHeader("Content-Disposition", "attachment; filename=\" " + arguments[2] + "\"");
-                IOUtils.copy(inputStream, httpServletResponse.getOutputStream());
-                httpServletResponse.getOutputStream().flush();
-                httpServletResponse.getOutputStream().close();
-            }
+            FileLoaderThread fileLoaderThread = new FileLoaderThread(arguments, httpServletResponse);
+            fileLoaderThread.start();
+            modelAndView.setViewName("file_upload");
+            modelAndView.addObject("message", "Delivering started");
         }
-        return null;
+        return modelAndView;
     }
 
     @RequestMapping(value = "/files", method = RequestMethod.GET)

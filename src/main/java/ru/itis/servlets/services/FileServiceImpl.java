@@ -33,9 +33,9 @@ public class FileServiceImpl implements FileService {
                 .ownerId(user.user.getId()).size(multipartFile.getSize())
                 .type(multipartFile.getContentType()).storageFileName(name)
                 .url("http://localhost:8000/files/" + name).build();
-        File file = new File(path + File.separator + name);
+         File file = new File(path + File.separator + name);
         try {
-            multipartFile.transferTo(file);
+            multipartFile. transferTo(file);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
