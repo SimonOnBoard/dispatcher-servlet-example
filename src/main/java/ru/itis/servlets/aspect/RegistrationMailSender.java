@@ -6,11 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.itis.servlets.dto.UserDto;
-
 import ru.itis.servlets.services.NotificatorService;
-
-
-
 
 @Aspect
 @Component

@@ -11,20 +11,31 @@ import ru.itis.servlets.services.MailService;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
-public class MailServiceImpl implements MailService {
-    @Autowired
+@Service
+public class MailServiceImpl implements MailService{
+
     private JavaMailSender mailSender;
+    private ExecutorService executorService;
+    public MailServiceImpl(JavaMailSender mailSender,ExecutorService executorService) {
+        this.mailSender = mailSender;
+        this.executorService = executorService;
+    }
+
     @Override
-    public void sendMessage(String subject, String mail,String html) {
-        MimeMessagePreparator messagePreparator = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    StandardCharsets.UTF_8.name());
-            messageHelper.setFrom("Nobody");
-            messageHelper.setTo(mail);
-            messageHelper.setSubject(subject);
-            messageHelper.setText(html, true);
+    public void sendMessage(String subject, String mail, String html) {
+        Runnable runnable = () -> {
+            MimeMessagePreparator messagePreparator = mimeMessage -> {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                        StandardCharsets.UTF_8.name());
+                messageHelper.setFrom("Nobody");
+                messageHelper.setTo(mail);
+                messageHelper.setSubject(subject);
+                messageHelper.setText(html, true);
+            };
+            mailSender.send(messagePreparator);
         };
-        mailSender.send(messagePreparator);
+        executorService.submit(runnable);
     }
 }

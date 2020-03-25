@@ -1,7 +1,5 @@
 package ru.itis.servlets.repositories;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.itis.servlets.models.Role;
 import ru.itis.servlets.models.State;
 import ru.itis.servlets.models.User;
 
@@ -17,6 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class UserRepositoryImpl implements UsersRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UsersRepository {
 
     //language=sql
     private static final String SQL_INSERT =
-            "INSERT INTO users (birth_day, nick, login, password, mail, state, code) values (?,?,?,?,?,?,?)";
+            "INSERT INTO users (birth_day, nick, login, password, mail, state, code, role) values (?,?,?,?,?,?,?,?)";
 
     @Override
     public void save(User entity) {
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UsersRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection
-                    .prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+                    .prepareStatement(SQL_INSERT);
             statement.setObject(1, entity.getBirthDay());
             statement.setString(2, entity.getNick());
             statement.setString(3, entity.getLogin());
@@ -49,9 +49,10 @@ public class UserRepositoryImpl implements UsersRepository {
             statement.setString(5, entity.getMail());
             statement.setString(6, entity.getState().toString());
             statement.setString(7, entity.getConfirmCode());
-            return statement; }, keyHolder);
-//            Long id = (Long) keyHolder.getKey();
-//        entity.setId(id);
+            statement.setString(8, entity.getRole().toString());
+            return statement;
+        }, keyHolder);
+        entity.setId((Long) keyHolder.getKey());
     }
 
     @Override
@@ -60,7 +61,8 @@ public class UserRepositoryImpl implements UsersRepository {
     }
 
     private static final String SQL_UPDATE =
-            "UPDATE users set birth_day = ?, nick = ?, login = ?, password = ?, mail = ?, state = ?, code = ? where id = ?";
+            "UPDATE users set birth_day = ?, nick = ?, login = ?, password = ?, mail = ?, state = ?, code = ?, role = ? where id = ?";
+
     @Override
     public void update(User entity) {
         int update = jdbcTemplate.update(connection -> {
@@ -73,7 +75,8 @@ public class UserRepositoryImpl implements UsersRepository {
             statement.setString(5, entity.getMail());
             statement.setString(6, entity.getState().toString());
             statement.setString(7, entity.getConfirmCode());
-            statement.setLong(8,entity.getId());
+            statement.setString(8, entity.getRole().toString());
+            statement.setLong(9, entity.getId());
             return statement;
         });
         if (update == 0) {
@@ -83,18 +86,20 @@ public class UserRepositoryImpl implements UsersRepository {
 
     private RowMapper<User> userRowMapper = (row, rowNumber) ->
             User.builder()
-            .id(row.getLong("id"))
-            .birthDay(row.getDate("birth_day"))
-            .nick(row.getString("nick"))
-            .login(row.getString("login"))
-            .password(row.getString("password"))
-            .mail(row.getString("mail"))
-            .state(State.valueOf(row.getString("state")))
-            .confirmCode(row.getString("code"))
-            .build();
+                    .id(row.getLong("id"))
+                    .birthDay(row.getDate("birth_day"))
+                    .nick(row.getString("nick"))
+                    .login(row.getString("login"))
+                    .password(row.getString("password"))
+                    .mail(row.getString("mail"))
+                    .state(State.valueOf(row.getString("state")))
+                    .role(Role.valueOf(row.getString("role")))
+                    .confirmCode(row.getString("code"))
+                    .build();
 
     private static final String SQL_SELECT_BY_CODE =
             "SELECT * FROM users where code = ?";
+
     @Override
     public Optional<User> findByCode(String code) {
         try {
@@ -104,8 +109,10 @@ public class UserRepositoryImpl implements UsersRepository {
             return Optional.empty();
         }
     }
+
     private static final String SQL_SELECT_BY_LOGIN =
             "SELECT * FROM users where login = ?";
+
     @Override
     public Optional<User> findByLogin(String login) {
         try {

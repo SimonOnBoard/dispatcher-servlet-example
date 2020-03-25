@@ -18,6 +18,9 @@ public class ConfirmationServiceImpl implements ConfirmationService {
         Optional<User> user = usersRepository.findByCode(key);
         if (user.isPresent()) {
             User user1 = user.get();
+            if(user1.getState().equals(State.CONFIRMED)){
+                return "Already confirmed";
+            }
             user1.setState(State.CONFIRMED);
             usersRepository.update(user1);
             return "Yes yep check)))";

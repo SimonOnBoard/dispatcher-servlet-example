@@ -1,5 +1,3 @@
-
-<#ftl encoding='UTF-8'>
 <#include "base.ftl"/>
 
 <#macro content>
@@ -45,7 +43,7 @@
                                min="1900-01-01" max="2020-01-01">
                     </div>
                 </div>
-
+                <input type="hidden" name="${_csrf.parameterName}" value= "${_csrf.token}"/>
                 <button type="submit" class="btn btn-danger btn-lg">Sign up</button>
             </form>
         </div>

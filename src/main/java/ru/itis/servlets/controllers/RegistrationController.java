@@ -2,35 +2,33 @@ package ru.itis.servlets.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itis.servlets.dto.SignUpDto;
 import ru.itis.servlets.dto.UserDto;
-import ru.itis.servlets.services.ParametrLoader;
+import ru.itis.servlets.models.UserDetailsImpl;
 import ru.itis.servlets.services.RegistrationService;
-import ru.itis.servlets.services.TemplateProcessor;
-import ru.itis.servlets.services.TemplateResolver;
-
-import javax.xml.crypto.dsig.SignedInfo;
 
 @Controller
 public class RegistrationController {
-    @Autowired
     private RegistrationService registrationService;
 
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public ModelAndView getRegistrationPage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("registration");
-        return modelAndView;
+    public RegistrationController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
 
+    @PreAuthorize("permitAll()")
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public ModelAndView getRegistrationPage(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails != null) return new ModelAndView("redirect:/files");
+        return new ModelAndView("registration");
+    }
+
+    @PreAuthorize("permitAll()")
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView completeRegistrationProcess(SignUpDto signUpDto) {
         UserDto userDto = registrationService.loadUserFromParameters(signUpDto);

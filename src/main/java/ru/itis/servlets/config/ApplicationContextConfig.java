@@ -16,10 +16,6 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-import ru.itis.servlets.repositories.FilesRepository;
-import ru.itis.servlets.repositories.FilesRepositoryImpl;
-import ru.itis.servlets.repositories.UserRepositoryImpl;
-import ru.itis.servlets.repositories.UsersRepository;
 import ru.itis.servlets.services.*;
 
 
@@ -28,11 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 @EnableAspectJAutoProxy
 @PropertySource("classpath:application.properties")
-
+@Configuration
 public class ApplicationContextConfig {
 
     @Autowired
@@ -40,7 +38,10 @@ public class ApplicationContextConfig {
 
     @Bean
     public MultipartResolver multipartResolver() {
-        return new CommonsMultipartResolver();
+        CommonsMultipartResolver multipartResolver
+                = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(999999999);
+        return multipartResolver;
     }
 
     @Bean
@@ -60,16 +61,15 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public freemarker.template.Configuration getFreeMarkerConfiguration(FreeMarkerConfigurationFactoryBean configurationFactoryBean) {
+    public freemarker.template.Configuration configuration(FreeMarkerConfigurationFactoryBean configurationFactoryBean) {
         return configurationFactoryBean.getObject();
     }
 
     @Bean
-    public FreeMarkerConfigurationFactoryBean getFreeMarkerConfigurationFarctoryBean() {
+    public FreeMarkerConfigurationFactoryBean getFreeMarkerConfigurationFactoryBean() {
         FreeMarkerConfigurationFactoryBean freeMarkerFactoryBean = new FreeMarkerConfigurationFactoryBean();
         freeMarkerFactoryBean.setTemplateLoaderPaths("/WEB-INF/ftl/");
         freeMarkerFactoryBean.setPreferFileSystemAccess(true);
-        freeMarkerFactoryBean.setDefaultEncoding("UTF-8");
         return freeMarkerFactoryBean;
     }
 
@@ -94,7 +94,7 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public Map<String, String> basicTemplateParams() {
+    public Map<String, String> templateParameters() {
         Map<String, String> model = new HashMap<>();
         model.put("location", environment.getProperty("location"));
         model.put("signature", environment.getProperty("link"));
@@ -121,23 +121,25 @@ public class ApplicationContextConfig {
     }
 
     @Bean
-    public MailService mailService() {
-        return new MailServiceImpl();
+    public ExecutorService executorService() {
+        int i = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(i);
+        return executorService;
     }
 
     @Bean
-    public UsersRepository userRepository() {
-        return new UserRepositoryImpl();
+    public String filePath() {
+        return environment.getProperty("file.path");
     }
 
     @Bean
-    public FileService fileService() {
-        return new FileServiceImpl(environment.getProperty("file.path"));
+    public String serverAddress() {
+        return environment.getProperty("server.address");
     }
 
     @Bean
-    public FilesRepository filesRepository() {
-        return new FilesRepositoryImpl();
+    public String serverConfirmationAddress() {
+        return environment.getProperty("server.confirmation.address");
     }
 
     @Bean
@@ -145,23 +147,4 @@ public class ApplicationContextConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public TemplateProcessor templateProcessor() {
-        return new TemplateProcessorImpl();
-    }
-
-    @Bean
-    public TemplateResolver templateResolver() {
-        return new TemplateResolverImpl();
-    }
-
-    @Bean
-    public ParametrLoader getParameterLoader() {
-        return new ParametrLoaderImpl();
-    }
-
-    @Bean
-    public RegistrationService registrationService() {
-        return new RegistrationServiceImpl();
-    }
 }

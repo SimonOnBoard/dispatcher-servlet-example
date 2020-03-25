@@ -1,4 +1,3 @@
-<#ftl encoding='UTF-8'>
 <#include "base.ftl"/>
 
 <#macro content>

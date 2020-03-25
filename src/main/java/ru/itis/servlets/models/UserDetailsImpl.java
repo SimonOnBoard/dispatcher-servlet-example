@@ -3,19 +3,26 @@ package ru.itis.servlets.models;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Builder
-public class MyUserDetails implements org.springframework.security.core.userdetails.UserDetails {
-    public User user;
+public class UserDetailsImpl implements org.springframework.security.core.userdetails.UserDetails {
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
         return authorities;
     }
 

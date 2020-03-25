@@ -11,16 +11,21 @@ import java.util.Map;
 @Service
 public class NotificatorServiceImpl implements NotificatorService {
 
-    @Autowired
     private TemplateProcessor templateProcessor;
-    @Autowired
     private MailService mailService;
+    private String serverAddress;
+
+    public NotificatorServiceImpl(String serverConfirmationAddress, TemplateProcessor templateProcessor, MailService mailService) {
+        this.serverAddress = serverConfirmationAddress;
+        this.templateProcessor = templateProcessor;
+        this.mailService = mailService;
+    }
 
     @Override
     public void sendRegistrationNotification(UserDto resultDto) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("name", resultDto.getName());
-        parameters.put("link", "http://localhost:8000/confirm/" + resultDto.getCode());
+        parameters.put("link", serverAddress + resultDto.getCode());
         sendMail(parameters, "mail.ftl", resultDto.getEmail(),"Confirm your registration");
     }
 
@@ -35,6 +40,6 @@ public class NotificatorServiceImpl implements NotificatorService {
         parameters.put("nick",resultDto.getUserName());
         parameters.put("link",resultDto.getUrl());
         parameters.put("fileName",resultDto.getOriginalName());
-        sendMail(parameters,"mail_2.frl",resultDto.getUserLogin(),"File notification");
+        sendMail(parameters,"mail_2.ftl",resultDto.getUserEmail(),"File notification");
     }
 }

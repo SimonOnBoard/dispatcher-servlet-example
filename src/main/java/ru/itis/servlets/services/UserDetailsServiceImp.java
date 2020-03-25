@@ -1,37 +1,37 @@
 package ru.itis.servlets.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.itis.servlets.models.MyUserDetails;
+import org.springframework.stereotype.Service;
+import ru.itis.servlets.models.UserDetailsImpl;
 import ru.itis.servlets.models.User;
 import ru.itis.servlets.repositories.UsersRepository;
 
 import java.util.Optional;
 
+@Service
 public class UserDetailsServiceImp implements UserDetailsService {
-    @Autowired
-    private BCryptPasswordEncoder encoder;
-
-    @Autowired
     private UsersRepository usersRepository;
 
+    public UserDetailsServiceImp(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
+
     @Override
-    public MyUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
 
     /*Here we are using dummy data, you need to load user data from
      database or other third party application*/
-        User user = findUserbyLogin(username);
+        User user = findUserByLogin(username);
 
         if (user != null) {
-            return MyUserDetails.builder().user(user).build();
+            return UserDetailsImpl.builder().user(user).build();
         } else {
             throw new UsernameNotFoundException("User not found.");
         }
     }
 
-    private User findUserbyLogin(String username) {
+    private User findUserByLogin(String username) {
         Optional<User> user = usersRepository.findByLogin(username);
         return user.orElse(null);
     }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class FileDto {
     private String originalName;
     private String userName;
-    private String userLogin;
+    private String userEmail;
     private String url;
     private Long size;
 }

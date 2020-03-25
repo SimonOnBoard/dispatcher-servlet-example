@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import ru.itis.servlets.dto.FileDto;
 import ru.itis.servlets.services.NotificatorService;
 
-
 @Aspect
 @Component
 public class MailSenderAspect {

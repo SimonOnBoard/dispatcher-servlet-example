@@ -1,5 +1,3 @@
-
-<#ftl encoding='UTF-8'>
 <#include "base.ftl"/>
 
 <#macro content>
@@ -7,6 +5,7 @@
         <div class="reg-container">
             <p>${result}</p>
         </div>
+        <a href="/profile">Go to profile</a>
     </div>
 
 </#macro>

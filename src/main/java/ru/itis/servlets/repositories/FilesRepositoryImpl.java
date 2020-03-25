@@ -6,15 +6,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ru.itis.servlets.models.FileInfo;
-import ru.itis.servlets.models.State;
-import ru.itis.servlets.models.User;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class FilesRepositoryImpl implements FilesRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -31,6 +30,7 @@ public class FilesRepositoryImpl implements FilesRepository {
                     .url(row.getString("url"))
                     .ownerId(row.getLong("owner_id"))
                     .build();
+
     @Override
     public Optional<FileInfo> getFileByName(String name) {
         try {
@@ -40,8 +40,10 @@ public class FilesRepositoryImpl implements FilesRepository {
             return Optional.empty();
         }
     }
+
     private static final String SQL_SELECT_BY_ORIGINAL_NAME =
             "SELECT * FROM files where original_file_name = ?";
+
     @Override
     public Optional<FileInfo> getFileByOriginalName(String name) {
         try {
@@ -50,6 +52,16 @@ public class FilesRepositoryImpl implements FilesRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    //language=sql
+    private static final String SQL_SELECT_BY_ID = "select * from files where owner_id = ?";
+
+
+
+    @Override
+    public List<FileInfo> findAllById(Long id) {
+        return jdbcTemplate.query(SQL_SELECT_BY_ID,new Object[]{id},filesRowMapper);
     }
 
     @Override
@@ -72,8 +84,7 @@ public class FilesRepositoryImpl implements FilesRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection
-                    .prepareStatement(SQL_INSERT);
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT);
             statement.setString(1, entity.getStorageFileName());
             statement.setString(2, entity.getOriginalFileName());
             statement.setLong(3, entity.getSize());
@@ -82,7 +93,7 @@ public class FilesRepositoryImpl implements FilesRepository {
             statement.setLong(6, entity.getOwnerId());
             return statement;
         }, keyHolder);
-        System.out.println("" + keyHolder.getKey());
+        entity.setId((Long) keyHolder.getKey());
     }
 
     @Override
