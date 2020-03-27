@@ -6,7 +6,11 @@
     <#assign a = user.getBirthDay()>
     <p>${a?string.iso_m_nz}</p>
     <a href="/files">Look for files</a>
-    <a href="/logout">Logout</a>
+    <form id="logout-form" action="/logout" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <input type="submit" value="Logout"/>
+
+    </form>
 </#macro>
 
 <#macro title>

@@ -1,15 +1,13 @@
 package ru.itis.servlets.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itis.servlets.dto.FileDto;
-import ru.itis.servlets.models.UserDetailsImpl;
+import ru.itis.servlets.security.defails.UserDetailsImpl;
 import ru.itis.servlets.services.FileService;
 
 import javax.servlet.http.HttpServletResponse;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.itis.servlets.dto.FileDto;
 import ru.itis.servlets.models.FileInfo;
-import ru.itis.servlets.models.UserDetailsImpl;
+import ru.itis.servlets.security.defails.UserDetailsImpl;
 import ru.itis.servlets.repositories.FilesRepository;
 
 import javax.servlet.http.HttpServletResponse;

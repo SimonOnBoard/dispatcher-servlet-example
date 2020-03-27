@@ -1,4 +1,4 @@
-package ru.itis.servlets.config;
+package ru.itis.servlets.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +27,16 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin()
-                .defaultSuccessUrl("/files", true)
+                .loginPage("/login")
+                .defaultSuccessUrl("/profile", true)
+                .usernameParameter("username")
                 .failureUrl("/login?error=true")
                 .and()
-                .rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400);
+                .rememberMe().rememberMeParameter("remember-me").key("1irnafkernf").tokenValiditySeconds(86400);
+
+        http.logout()
+                .deleteCookies("JSESSIONID", "remember-me")
+                .logoutSuccessUrl("/login?logout");
     }
+    
 }

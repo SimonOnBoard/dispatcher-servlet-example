@@ -1,8 +1,11 @@
-package ru.itis.servlets.models;
+package ru.itis.servlets.security.defails;
 
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import ru.itis.servlets.models.State;
+import ru.itis.servlets.models.User;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

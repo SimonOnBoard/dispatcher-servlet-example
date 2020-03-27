@@ -8,8 +8,10 @@
     <div class="feed-container">
         <div class="feed">
             <h1>Files</h1>
-            <a href="/logout">Logout</a>
-            <a href="/profile">Profile</a>
+            <form id="logout-form" action="/logout" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <input type="submit" value="Logout"/>
+            </form>            <a href="/profile">Profile</a>
             <form name="post_form" id="post_form" enctype="multipart/form-data">
                 <div id="namer">
                     <div id="namer-input">
@@ -32,7 +34,7 @@
                     <#list files as file>
                         <tr>
                             <td>${file.getOriginalFileName()}</td>
-                            <td>${file.getSize()}</td>
+                            <td>${file.getSize()} bytes  </td>
                             <td><a href="${file.getUrl()}">Load file</a></td>
                         </tr>
                     </#list>
@@ -73,10 +75,10 @@
                     $("#table").append(
                         "<tr>\n" +
                         "                <td>" + b.originalName +"</td>\n" +
-                        "                <td>" + b.size + "</td>\n" +
+                        "                <td>" + b.size + " bytes" +  "</td>\n" +
                         "                <td>" + "<a href=" + b.url + ">" + "Click to load" + "</a></td>\n" +
                         "            </tr>");
-                    alert(a);
+                    alert(b.url);
                     console.log(a);
                     console.log(b);
                 },

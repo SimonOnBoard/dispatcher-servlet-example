@@ -1,9 +1,8 @@
-package ru.itis.servlets.services;
+package ru.itis.servlets.security.defails;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.itis.servlets.models.UserDetailsImpl;
 import ru.itis.servlets.models.User;
 import ru.itis.servlets.repositories.UsersRepository;
 
