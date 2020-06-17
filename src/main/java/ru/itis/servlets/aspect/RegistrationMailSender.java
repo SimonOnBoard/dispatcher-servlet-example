@@ -16,8 +16,6 @@ public class RegistrationMailSender {
 
     @AfterReturning(pointcut = "execution(* ru.itis.servlets.services.RegistrationService.loadUserFromParameters(..))", returning = "resultDto")
     public void logAfterReturning(JoinPoint joinPoint, UserDto resultDto) {
-        System.out.println("Signature: " + joinPoint.getSignature().getDeclaringTypeName());
-        System.out.println("******");
         notificatorService.sendRegistrationNotification(resultDto);
     }
 }
