@@ -14,7 +14,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder()
+@Builder
 public class FileInfo {
 
     private Long id;
